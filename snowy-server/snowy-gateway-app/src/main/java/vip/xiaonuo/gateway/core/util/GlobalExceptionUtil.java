@@ -16,6 +16,7 @@ import cn.dev33.satoken.exception.SaTokenException;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
+import feign.FeignException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -128,8 +129,14 @@ public class GlobalExceptionUtil {
         } else if (e instanceof CommonException commonException) {
 
             // 通用业务异常，直接返回给前端
+            log.error(">>> 通用业务异常：", e);
             commonResult = CommonResult.get(commonException.getCode(), commonException.getMsg(), null);
-        }  else {
+        } else if (e instanceof FeignException) {
+
+            // Feign异常，直接返回给前端
+            log.error(">>> Feign异常：", e);
+            commonResult = CommonResult.error(e.getMessage());
+        } else {
             // 未知异常打印详情
             log.error(">>> 服务器未知异常，具体信息：", e);
             // 未知异常返回服务器异常

@@ -17,6 +17,7 @@ import cn.dev33.satoken.config.SaTokenConfig;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -65,7 +66,15 @@ public class ForwardAuthFilter implements GlobalFilter {
                 .build();
         ServerWebExchange newExchange = exchange.mutate().request(newRequest).build();
 
-        return chain.filter(newExchange);
+        return chain.filter(newExchange).then(Mono.fromRunnable(() -> {
+            // 此处在响应返回后执行
+            HttpStatus originalStatus = HttpStatus.valueOf(exchange.getResponse().getStatusCode().value());
+
+            // 设置状态码为 200
+            exchange.getResponse().setStatusCode(HttpStatus.OK);
+
+            // 可添加更多业务逻辑判断
+        }));
     }
 
 }
