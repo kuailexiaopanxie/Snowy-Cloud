@@ -24,7 +24,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import vip.xiaonuo.client.core.enums.ClientPasswordComplexityEnum;
 import vip.xiaonuo.client.modular.user.entity.ClientUser;
 import vip.xiaonuo.client.modular.user.entity.ClientUserExt;
-import vip.xiaonuo.client.modular.user.result.ClientLoginUser;
+import vip.xiaonuo.auth.core.pojo.ClientLoginUser;
 import vip.xiaonuo.client.modular.user.service.ClientUserExtService;
 import vip.xiaonuo.client.modular.user.service.ClientUserPasswordService;
 import vip.xiaonuo.client.modular.user.service.ClientUserService;

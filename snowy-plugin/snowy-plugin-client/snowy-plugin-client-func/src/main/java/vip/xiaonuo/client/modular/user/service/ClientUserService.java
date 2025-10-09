@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vip.xiaonuo.client.modular.user.entity.ClientUser;
 import vip.xiaonuo.client.modular.user.entity.ClientUserExt;
 import vip.xiaonuo.client.modular.user.param.*;
-import vip.xiaonuo.client.modular.user.result.ClientLoginUser;
+import vip.xiaonuo.auth.core.pojo.ClientLoginUser;
 import vip.xiaonuo.client.modular.user.result.ClientUserPicValidCodeResult;
 
 import java.util.List;

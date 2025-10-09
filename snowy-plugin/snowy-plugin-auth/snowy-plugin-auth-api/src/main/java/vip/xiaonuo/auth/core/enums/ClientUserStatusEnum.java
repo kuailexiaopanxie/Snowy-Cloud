@@ -10,28 +10,40 @@
  * 5.不可二次分发开源参与同类竞品，如有想法可联系团队xiaonuobase@qq.com商议合作。
  * 6.若您的项目无法满足以上几点，需要更多功能代码，获取Snowy商业授权许可，请在官网购买授权，地址为 https://www.xiaonuo.vip
  */
-package vip.xiaonuo.client.modular.user.result;
+package vip.xiaonuo.auth.core.enums;
 
-import vip.xiaonuo.auth.core.pojo.SaBaseClientLoginUser;
-import vip.xiaonuo.client.modular.user.enums.ClientUserStatusEnum;
+import lombok.Getter;
+import vip.xiaonuo.common.exception.CommonException;
 
 /**
- * C端登录用户对象
+ * C端用户状态枚举
  *
  * @author xuyuxiang
- * @date 2022/4/21 19:33
- **/
-public class ClientLoginUser extends SaBaseClientLoginUser {
+ * @date 2022/4/27 21:47
+ */
+@Getter
+public enum ClientUserStatusEnum {
 
     /**
-     * 实现是否可以登录
-     *
-     * @author xuyuxiang
-     * @date 2022/8/15 15:27
-     **/
-    @Override
-    public Boolean getEnabled() {
-        // 仅判断状态是否正常，可自行扩展
-        return this.getUserStatus().equals(ClientUserStatusEnum.ENABLE.getValue());
+     * 正常
+     */
+    ENABLE("ENABLE"),
+
+    /**
+     * 停用
+     */
+    DISABLED("DISABLED");
+
+    private final String value;
+
+    ClientUserStatusEnum(String value) {
+        this.value = value;
+    }
+
+    public static void validate(String value) {
+        boolean flag = ENABLE.getValue().equals(value) || DISABLED.getValue().equals(value);
+        if(!flag) {
+            throw new CommonException("不支持的C端用户状态：{}", value);
+        }
     }
 }

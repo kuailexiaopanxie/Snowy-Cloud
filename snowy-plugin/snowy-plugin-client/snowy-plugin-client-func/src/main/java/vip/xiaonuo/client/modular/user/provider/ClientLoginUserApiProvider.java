@@ -22,7 +22,7 @@ import vip.xiaonuo.auth.api.SaBaseLoginUserApi;
 import vip.xiaonuo.auth.core.pojo.SaBaseClientLoginUser;
 import vip.xiaonuo.auth.core.pojo.SaBaseLoginUser;
 import vip.xiaonuo.client.modular.user.entity.ClientUser;
-import vip.xiaonuo.client.modular.user.result.ClientLoginUser;
+import vip.xiaonuo.auth.core.pojo.ClientLoginUser;
 import vip.xiaonuo.client.modular.user.service.ClientUserService;
 
 import java.util.List;

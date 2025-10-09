@@ -12,7 +12,7 @@ import vip.xiaonuo.common.pojo.CommonResult;
  * @author dongxiayu
  * @date 2024/1/12 23:13
  */
-@FeignClient(name= FeignConstant.WEB_APP, contextId = "AuthFeign")
+@FeignClient(name= FeignConstant.WEB_APP, contextId = "AuthInnerFeign")
 public interface AuthInnerFeign {
 
     /**
