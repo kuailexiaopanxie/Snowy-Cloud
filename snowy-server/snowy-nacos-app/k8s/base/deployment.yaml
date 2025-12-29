@@ -22,6 +22,9 @@ spec:
         - name: http
           containerPort: 8848
           protocol: TCP
+        - name: grpc
+          containerPort: 9848
+          protocol: TCP
         env:
         # ConfigMap 引用
         - name: NACOS_STANDALONE

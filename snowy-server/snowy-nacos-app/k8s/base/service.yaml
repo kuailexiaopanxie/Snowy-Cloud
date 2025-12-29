@@ -11,5 +11,9 @@ spec:
     targetPort: http
     protocol: TCP
     name: http
+  - port: 9848
+    targetPort: grpc
+    protocol: TCP
+    name: grpc
   selector:
     app: snowy-nacos-app
