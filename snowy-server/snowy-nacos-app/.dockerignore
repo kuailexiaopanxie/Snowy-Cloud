@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Build
+target/
+*.class
+
+# Logs
+logs/
+*.log
+
+# K8s
+k8s/
+
+# Documentation
+README.md
+CLAUDE.md
+images/
+
+# Misc
+.DS_Store

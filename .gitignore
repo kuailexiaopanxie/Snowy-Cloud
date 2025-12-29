@@ -34,3 +34,8 @@ tmp/
 !kingbase8-8.6.0.jar
 
 .flattened-pom.xml
+
+# AI
+.serena
+CLAUDE.md
+.claude

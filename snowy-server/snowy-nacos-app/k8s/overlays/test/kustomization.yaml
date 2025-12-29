@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Namespace for test environment
+namespace: infra
+
+# Reference base configuration
+resources:
+  - ../../base
+  - secret.yaml
+  - ingress.yaml
+
+# Strategic merge patches
+patches:
+  - path: deployment-patch.yaml
+
+# Image tags
+images:
+  - name: snowy-nacos-app
+    newTag: latest

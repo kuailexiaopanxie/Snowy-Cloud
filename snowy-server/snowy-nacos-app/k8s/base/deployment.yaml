@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-nacos-app
+  labels:
+    app: snowy-nacos-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snowy-nacos-app
+  template:
+    metadata:
+      labels:
+        app: snowy-nacos-app
+    spec:
+      containers:
+      - name: nacos
+        image: snowy-nacos-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8848
+          protocol: TCP
+        env:
+        # ConfigMap references
+        - name: NACOS_STANDALONE
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-nacos-app-config
+              key: nacos.standalone
+        # Secret references (Nacos custom format)
+        - name: SPRING_SQL_INIT_PLATFORM
+          value: "mysql"
+        - name: DB_NUM
+          value: "1"
+        - name: DB_URL_0
+          valueFrom:
+            secretKeyRef:
+              name: snowy-nacos-app-secret
+              key: db-url
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: snowy-nacos-app-secret
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: snowy-nacos-app-secret
+              key: db-password
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+        livenessProbe:
+          httpGet:
+            path: /nacos/
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /nacos/
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: snowy-nacos-app-logs
