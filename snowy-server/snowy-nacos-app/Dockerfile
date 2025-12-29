@@ -1,45 +1,41 @@
 # ========================================
-# Stage 1: Maven Build
+# 阶段 1: Maven 构建
 # ========================================
 FROM maven:3.9-amazoncorretto-17 AS builder
 
-# Set working directory
+# 设置工作目录
 WORKDIR /build
 
-# Copy all pom.xml files (root, snowy-server, snowy-nacos-app)
+# 复制所有 pom.xml 文件（根目录、snowy-server、snowy-nacos-app）
 COPY pom.xml .
 COPY snowy-server/pom.xml snowy-server/
 COPY snowy-server/snowy-nacos-app/pom.xml snowy-server/snowy-nacos-app/
 
-# Copy source code
+# 复制源代码
 COPY snowy-server/snowy-nacos-app/src snowy-server/snowy-nacos-app/src
 
-# Build directly, skipping parent module validation
+# 直接构建，跳过父模块验证
 RUN mvn -f snowy-server/snowy-nacos-app/pom.xml clean package -DskipTests -B
 
 # ========================================
-# Stage 2: Runtime
+# 阶段 2: 运行时
 # ========================================
 FROM amazoncorretto:17
 
-# Set working directory
+# 设置工作目录
 WORKDIR /app
 
-# Copy JAR file from builder stage
+# 从构建阶段复制 JAR 文件
 COPY --from=builder /build/snowy-server/snowy-nacos-app/target/snowy-nacos-app.jar ./app.jar
 
-# Create log directory
+# 创建日志目录
 RUN mkdir -p /app/logs
 
-# Expose port
+# 暴露端口
 EXPOSE 8848
 
-# JVM parameters optimization
+# JVM 参数优化
 ENV JAVA_OPTS="-Xms512m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8848/nacos/ || exit 1
-
-# Start application
+# 启动应用
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

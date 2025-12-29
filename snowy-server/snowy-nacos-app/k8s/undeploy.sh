@@ -1,27 +1,27 @@
 #!/bin/bash
 
-# Snowy Nacos App Undeployment Script
+# Snowy Nacos App 卸载脚本
 
 set -e
 
-# Colors for output
+# 输出颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m' # 无颜色
 
-# Configuration
+# 配置参数
 NAMESPACE="infra"
-ENV=${1:-dev}  # Default to dev environment
+ENV=${1:-dev}  # 默认开发环境
 
-# Print colored message
+# 打印带颜色的消息
 print_msg() {
     local color=$1
     local msg=$2
     echo -e "${color}${msg}${NC}"
 }
 
-# Print section header
+# 打印章节标题
 print_header() {
     echo ""
     print_msg "${YELLOW}" "=========================================="
@@ -30,41 +30,41 @@ print_header() {
     echo ""
 }
 
-# Undeploy application
+# 卸载应用
 undeploy_app() {
-    print_header "Undeploying from ${ENV} Environment"
+    print_header "从 ${ENV} 环境卸载"
 
     (
         local SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
         cd "$SCRIPT_DIR"
 
-        # Check if overlay exists
+        # 检查 overlay 是否存在
         if [ ! -d "overlays/${ENV}" ]; then
-            print_msg "${RED}" "Environment '${ENV}' not found. Available: dev, test"
+            print_msg "${RED}" "环境 '${ENV}' 不存在。可用环境: dev, test"
             exit 1
         fi
 
         kubectl delete -k overlays/${ENV} --ignore-not-found=true
     )
-    print_msg "${GREEN}" "Undeployed ${ENV} environment"
+    print_msg "${GREEN}" "${ENV} 环境已卸载"
 }
 
-# Show remaining resources
+# 显示剩余资源
 show_remaining() {
-    print_header "Remaining Resources in ${NAMESPACE}"
+    print_header "${NAMESPACE} 命名空间中的剩余资源"
     kubectl get all,pvc,secret,configmap -n ${NAMESPACE} 2>/dev/null || true
 }
 
-# Main execution
+# 主执行流程
 main() {
-    print_msg "${GREEN}" "Snowy Nacos App - ${ENV} Environment Undeployment"
+    print_msg "${GREEN}" "Snowy Nacos App - ${ENV} 环境卸载"
     echo ""
 
     undeploy_app
     show_remaining
 
-    print_header "Undeployment Completed"
+    print_header "卸载完成"
 }
 
-# Run main function
+# 运行主函数
 main

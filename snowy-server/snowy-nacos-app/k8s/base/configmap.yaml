@@ -5,10 +5,6 @@ metadata:
   labels:
     app: snowy-nacos-app
 data:
-  # Nacos basic configuration
+  # Nacos 基础配置
   nacos.standalone: "true"
   nacos.core.auth.enabled: "false"
-  server.tomcat.basedir: "file:./logs"
-  server.port: "8848"
-  spring.sql.init.platform: "mysql"
-  db.num: "1"
