@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snowy-actuator-app-config
+  labels:
+    app: snowy-actuator-app
+data:
+  # Nacos 配置（默认）
+  nacos.server.addr: "snowy-nacos-app.infra.svc.cluster.local:8848"

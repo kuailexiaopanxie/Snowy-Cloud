@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-actuator-app
+  labels:
+    app: snowy-actuator-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snowy-actuator-app
+  template:
+    metadata:
+      labels:
+        app: snowy-actuator-app
+    spec:
+      containers:
+      - name: actuator
+        image: snowy-actuator-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 9001
+          protocol: TCP
+        env:
+        # Nacos 服务器地址（从 ConfigMap 获取）
+        - name: SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-actuator-app-config
+              key: nacos.server.addr
+        # 环境配置
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-actuator-app-config
+              key: spring.profiles.active
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: snowy-actuator-app-logs

@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-actuator-app
+spec:
+  template:
+    spec:
+      containers:
+      - name: actuator
+        env:
+        # 为开发环境添加日志路径环境变量
+        - name: LOG_PATH
+          value: "/app/logs"

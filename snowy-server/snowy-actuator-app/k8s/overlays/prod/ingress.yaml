@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snowy-actuator-app-ingress
+  labels:
+    app: snowy-actuator-app
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: actuator.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: snowy-actuator-app
+            port:
+              number: 9001
