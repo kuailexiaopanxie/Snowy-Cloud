@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-sentinel-app
+  labels:
+    app: snowy-sentinel-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snowy-sentinel-app
+  template:
+    metadata:
+      labels:
+        app: snowy-sentinel-app
+    spec:
+      containers:
+      - name: sentinel
+        image: snowy-sentinel-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 9002
+          protocol: TCP
+        env:
+        # Nacos server address (from ConfigMap)
+        - name: SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-sentinel-app-config
+              key: nacos.server.addr
+        # Environment profile
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-sentinel-app-config
+              key: spring.profiles.active
+        # Health probes
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 9002
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 9002
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: snowy-sentinel-app-logs

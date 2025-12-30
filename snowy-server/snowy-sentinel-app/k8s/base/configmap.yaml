@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snowy-sentinel-app-config
+  labels:
+    app: snowy-sentinel-app
+data:
+  # Nacos configuration (default)
+  nacos.server.addr: "snowy-nacos-app.infra.svc.cluster.local:8848"
