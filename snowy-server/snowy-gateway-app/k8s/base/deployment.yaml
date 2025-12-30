@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-gateway-app
+  labels:
+    app: snowy-gateway-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snowy-gateway-app
+  template:
+    metadata:
+      labels:
+        app: snowy-gateway-app
+    spec:
+      containers:
+      - name: gateway
+        image: snowy-gateway-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 9003
+          protocol: TCP
+        - name: sentinel-port
+          containerPort: 8719
+          protocol: TCP
+        env:
+        # Nacos server address (from ConfigMap)
+        - name: SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-gateway-app-config
+              key: nacos.server.addr
+        # Environment profile
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-gateway-app-config
+              key: spring.profiles.active
+        # Sentinel Dashboard address (from ConfigMap)
+        - name: SPRING_CLOUD_SENTINEL_TRANSPORT_DASHBOARD
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-gateway-app-config
+              key: sentinel.dashboard.addr
+        # Log path
+        - name: LOG_PATH
+          value: "/app/logs"
+        # Health probes - liveness probe
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 9003
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        # Health probes - readiness probe
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 9003
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: snowy-gateway-app-logs

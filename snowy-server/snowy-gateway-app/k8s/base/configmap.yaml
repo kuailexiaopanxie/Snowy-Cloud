@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snowy-gateway-app-config
+  labels:
+    app: snowy-gateway-app
+data:
+  # Nacos configuration (default value, can be overridden by overlays)
+  nacos.server.addr: "snowy-nacos-app.infra.svc.cluster.local:8848"
+  # Sentinel Dashboard address (K8s internal service)
+  sentinel.dashboard.addr: "snowy-sentinel-app.infra.svc.cluster.local:9002"
