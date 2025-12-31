@@ -4,7 +4,7 @@ metadata:
   name: snowy-xxl-job-app-ingress
   namespace: production
   annotations:
-    # Production environment can enable SSL
+    # 生产环境可启用 SSL
     # nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx

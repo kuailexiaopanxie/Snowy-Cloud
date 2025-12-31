@@ -1,28 +1,28 @@
 #!/bin/bash
 
-# Snowy XXL-Job App image build script
-# Build Docker image and load to Minikube (without deployment)
+# Snowy XXL-Job App 镜像构建脚本
+# 构建 Docker 镜像并加载到 Minikube（不含部署）
 
 set -e
 
-# Color definitions
+# 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No color
+NC='\033[0m' # 无颜色
 
-# Configuration parameters
+# 配置参数
 IMAGE_NAME="snowy-xxl-job-app"
 IMAGE_TAG="latest"
 
-# Print colored message
+# 打印彩色消息
 print_msg() {
     local color=$1
     local msg=$2
     echo -e "${color}${msg}${NC}"
 }
 
-# Print section header
+# 打印章节标题
 print_header() {
     echo ""
     print_msg "${YELLOW}" "=========================================="
@@ -31,27 +31,27 @@ print_header() {
     echo ""
 }
 
-# Check if minikube is running
+# 检查 minikube 是否运行
 check_minikube() {
-    print_header "Check Minikube Status"
+    print_header "检查 Minikube 状态"
     if ! minikube status > /dev/null 2>&1; then
-        print_msg "${RED}" "Minikube is not running, please start minikube first:"
+        print_msg "${RED}" "Minikube 未运行，请先启动 minikube:"
         echo "  minikube start"
         exit 1
     fi
-    print_msg "${GREEN}" "Minikube is running"
+    print_msg "${GREEN}" "Minikube 运行中"
 
-    # Show minikube Docker info
+    # 显示 minikube Docker 信息
     echo ""
-    echo "Minikube node info:"
+    echo "Minikube 节点信息:"
     minikube node list
 }
 
-# Build Docker image
+# 构建 Docker 镜像
 build_image() {
-    print_header "Build Docker Image"
+    print_header "构建 Docker 镜像"
 
-    # Get project root directory
+    # 获取项目根目录
     local SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     local PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
     local PARENT_DIR="$(dirname "$PROJECT_DIR")"
@@ -59,52 +59,52 @@ build_image() {
 
     (
         cd "$ROOT_DIR"
-        echo "Build context: $ROOT_DIR"
+        echo "构建上下文: $ROOT_DIR"
         echo "Dockerfile: snowy-server/snowy-xxl-job-app/Dockerfile"
         echo ""
         docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f snowy-server/snowy-xxl-job-app/Dockerfile .
     )
 
-    print_msg "${GREEN}" "Image built successfully: ${IMAGE_NAME}:${IMAGE_TAG}"
+    print_msg "${GREEN}" "镜像构建成功: ${IMAGE_NAME}:${IMAGE_TAG}"
 
-    # Show image info
+    # 显示镜像信息
     echo ""
-    echo "Local image info:"
+    echo "本地镜像信息:"
     docker images ${IMAGE_NAME}:${IMAGE_TAG}
 }
 
-# Load image to minikube
+# 加载镜像到 minikube
 load_image() {
-    print_header "Load Image to Minikube"
+    print_header "加载镜像到 Minikube"
     minikube image load ${IMAGE_NAME}:${IMAGE_TAG}
-    print_msg "${GREEN}" "Image loaded to minikube"
+    print_msg "${GREEN}" "镜像已加载到 minikube"
 
-    # Verify image is in minikube
+    # 验证镜像在 minikube 中
     echo ""
-    echo "Images in minikube:"
-    minikube image ls | grep ${IMAGE_NAME} || echo "Image not found"
+    echo "Minikube 中的镜像:"
+    minikube image ls | grep ${IMAGE_NAME} || echo "镜像未找到"
 }
 
-# Show next steps
+# 显示后续步骤
 show_next_steps() {
-    print_header "Next Steps"
-    echo "Image is ready, now you can deploy:"
+    print_header "后续步骤"
+    echo "镜像已就绪，现在可以部署:"
     echo ""
-    echo "1. Deploy application:"
+    echo "1. 部署应用:"
     echo "   cd k8s"
     echo "   ./deploy.sh dev"
     echo ""
-    echo "2. Or deploy manually:"
+    echo "2. 或手动部署:"
     echo "   kubectl apply -k overlays/dev"
     echo ""
-    echo "3. View images:"
+    echo "3. 查看镜像:"
     echo "   docker images ${IMAGE_NAME}:${IMAGE_TAG}"
     echo "   minikube image ls | grep ${IMAGE_NAME}"
 }
 
-# Main execution flow
+# 主执行流程
 main() {
-    print_msg "${GREEN}" "Snowy XXL-Job App - Image Build"
+    print_msg "${GREEN}" "Snowy XXL-Job App - 镜像构建"
     echo ""
 
     check_minikube
@@ -112,8 +112,8 @@ main() {
     load_image
     show_next_steps
 
-    print_header "Build Complete"
+    print_header "构建完成"
 }
 
-# Run main function
+# 运行主函数
 main

@@ -5,5 +5,5 @@ metadata:
   labels:
     app: snowy-xxl-job-app
 data:
-  # Nacos configuration (default value, can be overridden by overlays)
+  # Nacos 配置（默认值，可被 overlays 覆盖）
   nacos.server.addr: "snowy-nacos-app.infra.svc.cluster.local:8848"

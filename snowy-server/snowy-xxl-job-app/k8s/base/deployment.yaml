@@ -23,22 +23,22 @@ spec:
           containerPort: 9004
           protocol: TCP
         env:
-        # Nacos server address (from ConfigMap)
+        # Nacos 服务器地址（来自 ConfigMap）
         - name: SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR
           valueFrom:
             configMapKeyRef:
               name: snowy-xxl-job-app-config
               key: nacos.server.addr
-        # Environment profile
+        # 环境配置
         - name: SPRING_PROFILES_ACTIVE
           valueFrom:
             configMapKeyRef:
               name: snowy-xxl-job-app-config
               key: spring.profiles.active
-        # Log path
+        # 日志路径
         - name: LOG_PATH
           value: "/app/logs"
-        # Health probes - liveness probe (with context path)
+        # 健康检查 - 存活探针（含 context path）
         livenessProbe:
           httpGet:
             path: /xxl-job-admin/actuator/health/liveness
@@ -49,7 +49,7 @@ spec:
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 3
-        # Health probes - readiness probe (with context path)
+        # 健康检查 - 就绪探针（含 context path）
         readinessProbe:
           httpGet:
             path: /xxl-job-admin/actuator/health/readiness

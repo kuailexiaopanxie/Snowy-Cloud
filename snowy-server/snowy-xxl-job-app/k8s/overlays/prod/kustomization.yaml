@@ -1,15 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Production environment namespace
+# 生产环境命名空间
 namespace: production
 
-# Reference base configuration
+# 引用基础配置
 resources:
   - ../../base
   - ingress.yaml
 
-# ConfigMap generator (merge with base configmap)
+# ConfigMap 生成器（与基础 configmap 合并）
 configMapGenerator:
   - name: snowy-xxl-job-app-config
     behavior: merge
@@ -17,7 +17,7 @@ configMapGenerator:
       - nacos.server.addr=nacos-prod.example.com:8848
       - spring.profiles.active=prod
 
-# Image tag
+# 镜像标签
 images:
   - name: snowy-xxl-job-app
     newTag: latest
