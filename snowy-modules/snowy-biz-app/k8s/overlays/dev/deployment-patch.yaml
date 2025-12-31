@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-biz-app
+spec:
+  template:
+    spec:
+      containers:
+      - name: biz
+        env:
+        - name: LOG_PATH
+          value: "/app/logs"
+        # 开发环境不需要特殊覆盖，使用 base 配置即可

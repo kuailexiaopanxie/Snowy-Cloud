@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snowy-biz-app-ingress
+  labels:
+    app: snowy-biz-app
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: biz-prod.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: snowy-biz-app
+            port:
+              number: 9102

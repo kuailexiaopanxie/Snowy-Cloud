@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-biz-app
+  labels:
+    app: snowy-biz-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snowy-biz-app
+  template:
+    metadata:
+      labels:
+        app: snowy-biz-app
+    spec:
+      containers:
+      - name: biz
+        image: snowy-biz-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 9102
+          protocol: TCP
+        env:
+        # Nacos 服务器地址（来自 ConfigMap）
+        - name: SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-biz-app-config
+              key: nacos.server.addr
+        # 环境配置（来自 ConfigMap）
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-biz-app-config
+              key: spring.profiles.active
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+        # 健康检查 - 存活探针
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        # 健康检查 - 就绪探针
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: snowy-biz-app-logs
