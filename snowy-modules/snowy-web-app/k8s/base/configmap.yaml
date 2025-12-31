@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snowy-web-app-config
+  labels:
+    app: snowy-web-app
+data:
+  # Nacos 配置（默认值，可被 overlays 覆盖）
+  nacos.server.addr: "snowy-nacos-app.infra.svc.cluster.local:8848"
+  # 环境配置（默认值，可被 overlays 覆盖）
+  spring.profiles.active: "dev"

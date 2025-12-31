@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snowy-web-app-ingress
+  labels:
+    app: snowy-web-app
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: web-dev.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: snowy-web-app
+            port:
+              number: 9101
