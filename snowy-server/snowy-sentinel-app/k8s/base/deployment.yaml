@@ -23,19 +23,19 @@ spec:
           containerPort: 9002
           protocol: TCP
         env:
-        # Nacos server address (from ConfigMap)
+        # Nacos 服务器地址（来自 ConfigMap）
         - name: SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR
           valueFrom:
             configMapKeyRef:
               name: snowy-sentinel-app-config
               key: nacos.server.addr
-        # Environment profile
+        # 环境配置
         - name: SPRING_PROFILES_ACTIVE
           valueFrom:
             configMapKeyRef:
               name: snowy-sentinel-app-config
               key: spring.profiles.active
-        # Health probes
+        # 健康检查
         livenessProbe:
           httpGet:
             path: /actuator/health/liveness

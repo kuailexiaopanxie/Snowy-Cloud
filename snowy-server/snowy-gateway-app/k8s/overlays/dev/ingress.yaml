@@ -5,7 +5,7 @@ metadata:
   namespace: infra
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    # Gateway specific annotations (support WebSocket, large file upload, etc.)
+    # 网关特定注解（支持 WebSocket、大文件上传等）
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"

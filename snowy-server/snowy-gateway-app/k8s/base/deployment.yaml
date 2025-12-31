@@ -26,28 +26,28 @@ spec:
           containerPort: 8719
           protocol: TCP
         env:
-        # Nacos server address (from ConfigMap)
+        # Nacos 服务器地址（来自 ConfigMap）
         - name: SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR
           valueFrom:
             configMapKeyRef:
               name: snowy-gateway-app-config
               key: nacos.server.addr
-        # Environment profile
+        # 环境配置
         - name: SPRING_PROFILES_ACTIVE
           valueFrom:
             configMapKeyRef:
               name: snowy-gateway-app-config
               key: spring.profiles.active
-        # Sentinel Dashboard address (from ConfigMap)
+        # Sentinel 控制台地址（来自 ConfigMap）
         - name: SPRING_CLOUD_SENTINEL_TRANSPORT_DASHBOARD
           valueFrom:
             configMapKeyRef:
               name: snowy-gateway-app-config
               key: sentinel.dashboard.addr
-        # Log path
+        # 日志路径
         - name: LOG_PATH
           value: "/app/logs"
-        # Health probes - liveness probe
+        # 健康检查 - 存活探针
         livenessProbe:
           httpGet:
             path: /actuator/health/liveness
@@ -58,7 +58,7 @@ spec:
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 3
-        # Health probes - readiness probe
+        # 健康检查 - 就绪探针
         readinessProbe:
           httpGet:
             path: /actuator/health/readiness

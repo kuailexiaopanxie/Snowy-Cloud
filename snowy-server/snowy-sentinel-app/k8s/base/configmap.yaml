@@ -5,5 +5,5 @@ metadata:
   labels:
     app: snowy-sentinel-app
 data:
-  # Nacos configuration (default)
+  # Nacos 配置（默认值）
   nacos.server.addr: "snowy-nacos-app.infra.svc.cluster.local:8848"

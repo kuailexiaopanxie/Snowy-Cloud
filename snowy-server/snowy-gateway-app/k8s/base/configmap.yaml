@@ -5,7 +5,7 @@ metadata:
   labels:
     app: snowy-gateway-app
 data:
-  # Nacos configuration (default value, can be overridden by overlays)
+  # Nacos 配置（默认值，可被 overlays 覆盖）
   nacos.server.addr: "snowy-nacos-app.infra.svc.cluster.local:8848"
-  # Sentinel Dashboard address (K8s internal service)
+  # Sentinel 控制台地址（K8s 内部服务）
   sentinel.dashboard.addr: "snowy-sentinel-app.infra.svc.cluster.local:9002"
