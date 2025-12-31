@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snowy-xxl-job-app-config
+  labels:
+    app: snowy-xxl-job-app
+data:
+  # Nacos configuration (default value, can be overridden by overlays)
+  nacos.server.addr: "snowy-nacos-app.infra.svc.cluster.local:8848"

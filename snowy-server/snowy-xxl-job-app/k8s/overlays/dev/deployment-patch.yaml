@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-xxl-job-app
+spec:
+  template:
+    spec:
+      containers:
+      - name: xxl-job
+        env:
+        - name: LOG_PATH
+          value: "/app/logs"

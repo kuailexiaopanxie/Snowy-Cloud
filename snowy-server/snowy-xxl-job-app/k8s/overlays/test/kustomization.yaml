@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Test environment namespace
+namespace: infra
+
+# Reference base configuration
+resources:
+  - ../../base
+  - ingress.yaml
+
+# ConfigMap generator (merge with base configmap)
+configMapGenerator:
+  - name: snowy-xxl-job-app-config
+    behavior: merge
+    literals:
+      - nacos.server.addr=snowy-nacos-app.infra.svc.cluster.local:8848
+      - spring.profiles.active=test
+
+# Image tag
+images:
+  - name: snowy-xxl-job-app
+    newTag: latest

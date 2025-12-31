@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-xxl-job-app
+  labels:
+    app: snowy-xxl-job-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snowy-xxl-job-app
+  template:
+    metadata:
+      labels:
+        app: snowy-xxl-job-app
+    spec:
+      containers:
+      - name: xxl-job
+        image: snowy-xxl-job-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 9004
+          protocol: TCP
+        env:
+        # Nacos server address (from ConfigMap)
+        - name: SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-xxl-job-app-config
+              key: nacos.server.addr
+        # Environment profile
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: snowy-xxl-job-app-config
+              key: spring.profiles.active
+        # Log path
+        - name: LOG_PATH
+          value: "/app/logs"
+        # Health probes - liveness probe (with context path)
+        livenessProbe:
+          httpGet:
+            path: /xxl-job-admin/actuator/health/liveness
+            port: 9004
+            scheme: HTTP
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        # Health probes - readiness probe (with context path)
+        readinessProbe:
+          httpGet:
+            path: /xxl-job-admin/actuator/health/readiness
+            port: 9004
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: snowy-xxl-job-app-logs
