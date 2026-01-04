@@ -1,0 +1,8 @@
+# Namespace for frontend application
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: frontend
+  labels:
+    name: frontend
+    env: common

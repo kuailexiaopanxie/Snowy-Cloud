@@ -1,0 +1,12 @@
+# ExternalName Service to reference Gateway in infra namespace
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+  labels:
+    app: snowy-admin-web
+spec:
+  type: ExternalName
+  externalName: snowy-gateway-app.infra.svc.cluster.local
+  ports:
+  - port: 9003

@@ -1,0 +1,32 @@
+# Ingress for Snowy Admin Web
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snowy-admin-web-ingress
+  labels:
+    app: snowy-admin-web
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Remove rewrite-target annotation for API paths
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: snowy-dev.local
+    http:
+      paths:
+      # Frontend static files
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: snowy-admin-web
+            port:
+              number: 8080
+      # API proxy to Gateway (via ExternalName Service)
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: gateway-service
+            port:
+              number: 9003

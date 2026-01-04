@@ -1,0 +1,16 @@
+# Service for Snowy Admin Web
+apiVersion: v1
+kind: Service
+metadata:
+  name: snowy-admin-web
+  labels:
+    app: snowy-admin-web
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: snowy-admin-web

@@ -1,0 +1,8 @@
+# Deployment patch for dev environment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowy-admin-web
+spec:
+  # Dev environment uses base configuration
+  # Add environment-specific overrides here if needed
