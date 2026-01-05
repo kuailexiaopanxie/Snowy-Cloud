@@ -35,7 +35,7 @@ const errorCodeMap = {
 const loginBack = ref(false)
 // 创建 axios 实例
 const service = axios.create({
-	baseURL: '/api', // api base_url
+	baseURL: sysConfig.API_URL || '', // api base_url (从环境变量读取，K8s 部署时为空)
 	timeout: sysConfig.TIMEOUT // 请求超时时间
 })
 

@@ -12,7 +12,7 @@ NC='\033[0m'
 
 # Config
 IMAGE_NAME="snowy-admin-web"
-IMAGE_TAG="latest"
+IMAGE_TAG="$(date +%Y%m%d-%H%M)"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 print_msg() {

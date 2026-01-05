@@ -12,7 +12,7 @@ NC='\033[0m'
 
 # Config
 IMAGE_NAME="snowy-admin-web"
-IMAGE_TAG="latest"
+IMAGE_TAG="$(date +%Y%m%d-%H%M)"
 ENV=${1:-dev}
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 K8S_DIR="$PROJECT_ROOT/k8s"
@@ -83,7 +83,10 @@ deploy() {
 
     kubectl apply -k .
 
-    print_msg "${GREEN}" "${ENV} 环境部署完成"
+    # Update image to latest build (with timestamp tag)
+    kubectl set image deployment/snowy-admin-web -n frontend nginx=${IMAGE_NAME}:${IMAGE_TAG}
+
+    print_msg "${GREEN}" "${ENV} 环境部署完成 (镜像: ${IMAGE_NAME}:${IMAGE_TAG})"
 }
 
 # Wait for pod ready
