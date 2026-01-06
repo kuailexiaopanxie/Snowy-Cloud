@@ -1,0 +1,27 @@
+# Ingress for Knife4j API Documentation
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snowy-admin-web-ingress-doc
+  labels:
+    app: snowy-admin-web
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Rewrite /doc/* to /*
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: snowy-dev.local
+    http:
+      paths:
+      # Knife4j API documentation
+      # /doc/doc.html -> /doc.html
+      - path: /doc(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: gateway-service
+            port:
+              number: 9003

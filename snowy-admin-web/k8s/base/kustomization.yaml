@@ -10,6 +10,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
+  - ingress-doc.yaml
 
 images:
   - name: snowy-admin-web

@@ -30,3 +30,10 @@ spec:
             name: gateway-service
             port:
               number: 9003
+      - path: /druid
+        pathType: Prefix
+        backend:
+          service:
+            name: gateway-service
+            port:
+              number: 9003
