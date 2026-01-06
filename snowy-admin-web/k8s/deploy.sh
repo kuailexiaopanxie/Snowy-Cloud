@@ -119,6 +119,54 @@ show_status() {
     kubectl get pods -n frontend
 }
 
+# Get images to cleanup (all except latest)
+get_images_to_cleanup() {
+    docker images --format "{{.Repository}}:{{.Tag}} {{.CreatedAt}}" \
+        | grep "^${IMAGE_NAME}:" \
+        | sort -k2 -r \
+        | tail -n +2 \
+        | awk '{print $1}'
+}
+
+# Cleanup old docker images
+cleanup_docker_images() {
+    local images=$1
+
+    echo "$images" | while read -r image; do
+        [ -n "$image" ] && docker rmi "$image" 2>/dev/null && print_msg "${GREEN}" "已删除本地镜像: $image"
+    done
+}
+
+# Cleanup old minikube images
+cleanup_minikube_images() {
+    local images=$1
+
+    echo "$images" | while read -r image; do
+        [ -n "$image" ] && minikube image rm "$image" 2>/dev/null && print_msg "${GREEN}" "已删除 minikube 镜像: $image"
+    done
+}
+
+# Cleanup old images
+cleanup_old_images() {
+    print_header "清理历史镜像"
+
+    local images_to_remove=$(get_images_to_cleanup)
+
+    if [ -z "$images_to_remove" ]; then
+        print_msg "${GREEN}" "无需清理的镜像"
+        return 0
+    fi
+
+    print_msg "${YELLOW}" "将清理以下历史镜像："
+    echo "$images_to_remove"
+    echo ""
+
+    cleanup_docker_images "$images_to_remove"
+    cleanup_minikube_images "$images_to_remove"
+
+    print_msg "${GREEN}" "历史镜像清理完成"
+}
+
 # Show access info
 show_access_info() {
     print_header "访问信息"
@@ -151,6 +199,7 @@ main() {
     create_namespace
     deploy
     wait_for_pod
+    cleanup_old_images
     show_status
     show_access_info
 
